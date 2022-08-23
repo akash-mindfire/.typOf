@@ -14,6 +14,7 @@
       left: 0;
       width: 500vh;
   }
+  
 .page-wrap{
     background:#fff;
     padding: 0;
@@ -162,7 +163,7 @@ header.user-detail__header{
     margin: 1rem auto;
     border: 1px solid;
     max-width: 350px;
-    height: 66px;
+    height: 50px;
     border-radius: 10px;
     padding: 5px;
     
@@ -777,6 +778,7 @@ input[name="input-type"],input[name="input-type1"] {
     display: flex;
     flex-direction: column;
     justify-content: center;
+
 }
 .payment-title{
     width: 100%;
@@ -855,12 +857,13 @@ section img{
 .error-wrap{
     position: relative;
     text-align: center;
+    margin-top: 35px;
 }
 .text-error{
     width: 100%;
     position: absolute;
     left: 0px;
-    bottom: 10%;
+    bottom: 7%;
     text-align: center;
     color: #e31b1b;
     font-size: 15px;
@@ -972,7 +975,7 @@ section img{
         max-height: 355px;
         box-sizing: border-box;
         padding: 0;
-        margin: 0;
+        margin: 1.5rem 0 0 0;
     }
     /* .shipping-method{
         width: 100%;
@@ -1068,4 +1071,22 @@ section img{
     display: flex;
     align-items: center;
 }
+}
+@media screen and (min-width:641px) and (max-width:991px) {
+    .Drawer__footer{
+        position: absolute;
+        width:89%;
+        bottom:5%
+    }
+    div#sidebar-cart{
+        width:550px;
+    }
+    .user-detail{
+        width:60%;
+        height: 100%;
+    }
+    .page-wrap{
+        width: 90%;
+    }
+    
 }

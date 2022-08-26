@@ -443,7 +443,7 @@ class CheckOutModal extends React.Component {
     addressVerificatin: false,
     mobileOTPpage: false,
     otp: ["", "", "", ""],
-    currentPage: "pay",
+    currentPage: "mobile",
     pincode: "",
     city: "",
     state: "",
@@ -934,7 +934,7 @@ if(window.innerWidth < 767){
         {mobileView ? 
           <div className='mobile-view-page-wrap'>
             <header className="mobile-user-detail__header">
-              <div style={{display:'flex',alignItems:'center'}}> <img
+              <div className="mobile-user-detail__header-back-icon"> <img
                             src="https://pdp.gokwik.co/assets/icons/bac.svg"
                             alt=""
                           /></div>

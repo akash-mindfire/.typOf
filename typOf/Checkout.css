@@ -1233,4 +1233,13 @@ section img{
       .payViaUpi-btn-label{
         font-size: 21px;
       }
+      .option-button-cod{
+        padding:1rem;
+      }
+      .mobile-user-detail__header-back-icon{
+        display:flex;
+        align-items:center;
+      }
+      
+
 }

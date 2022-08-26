@@ -34,6 +34,9 @@ left: 50%;
 top: 50%;
 transform: translate(-50%, -50%);
 }
+.gk-content{
+    padding:0.5rem 1rem;
+}
 .close-btn{
     background: #f8f8f8 ! important;
     right: 5px;
@@ -140,9 +143,15 @@ header.user-detail__header{
     text-align: center;
     height: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+    align-items: center;
     padding: 1rem 0;
+}
+.summary-title-inner h4{
+    font-size: 1.5rem;
+
+    font-weight: 400;
+                
+    margin-left: 10px;
 }
 .main-content_header{
     font-weight: 600;
@@ -941,6 +950,8 @@ section img{
     padding:7px 20px;
     font-size: 20px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 .add-new-desktop span{
     margin-left:10px;
@@ -962,7 +973,7 @@ section img{
     .address-listing{
         padding: 0 ;
         height: calc(100vh - 230px);
-        max-height: 300px;
+        max-height: 370px;
         margin-top: 0;
     }
     .payment-title{
@@ -993,7 +1004,7 @@ section img{
     }
     .address-container{
         height: calc(100vh - 230px);
-        max-height: 337px;
+        max-height: 370px;
         max-width: 100%;
         margin: 0 auto;
     }
@@ -1079,7 +1090,7 @@ section img{
         bottom:5%
     }
     div#sidebar-cart{
-        width:550px;
+        width:calc(100vw - 300px);
     }
     .user-detail{
         width:60%;
@@ -1088,5 +1099,138 @@ section img{
     .page-wrap{
         width: 90%;
     }
-    
+    .new-pm__header{
+        min-height: 45px;
+        max-height: 45px;
+    }
+    .merchant-logo img {
+        width: auto;
+        max-height: 25px;
+    }
+    .gk-content{
+        padding:5px;
+    }
+    .circle-box{
+        width:25px;
+        height: 25px;
+        font-size: 17px;
+    }
+    .title {
+        font-size: 16px;
+        font-weight: 500;
+        margin-left: 6px;
+    }
+    .main-content_header{
+        font-size: 21px;
+        line-height: 17px;
+    }
+    #input-wrapper{
+        width: 75%;
+        max-width: 75%;
+        height: 35px;
+    }
+    #country-code{
+        font-size: 21px;
+    }
+    .footer{
+        position: absolute;
+        top:110%;
+        padding:0;
+        left: 0;
+        margin: 0;
+    }
+    .btn-wrapper{
+        margin: 0;
+        max-width: 100%;
+        padding:0 1.5rem;
+    }
+    .continue-button{
+        padding:2rem;
+    }
+    .main-footer{
+        padding: 1.5rem 3.5rem 2rem 1rem;
+    }
+    .cart-wrap-scroller{
+        padding:0;
+    }
+    .order-summary-container{
+        padding: 0;
+    }
+    .summary-title{
+        padding: 0;
+    }
+    .summary-title-inner h4{
+        font-size: 1.3rem;
+        margin-left: 5px;
+    }
+    .order-summary{
+        padding: 0.5rem;
+    }
+    .discount-coupon-inner{
+        padding:0.5rem;
+    }
+    .phone-input{
+        font-size: 21px;
+    }
+    .btn-wrapper span{
+        margin-top: 5px !important;
+    }
+    .address-listing,.main-container{
+        max-height: 370px;
+    }   
+}
+@media screen and  (max-width: 767px){
+    .info_wrap{
+        display: block;
+      }
+      .title{
+        margin-top:5px;
+        font-size: 16px;
+        margin-left: 0;
+      }
+      .verifyMobileNumber-label{
+        font-size: 20px;
+      }
+      .enterOTP-label{
+        font-size: 19px;
+      }
+      .mobile-number{
+        font-size: 18px;
+      }
+      .address-listing-inner{
+        font-size: 21px;
+      }
+      .gk-content{
+        padding: 0;
+      }
+      .cart-wrap{
+        padding:1rem;
+      }
+      .address-listing{
+        padding:1rem;
+      }
+      .add-new-desktop{
+        padding: 7px 0;
+      }
+      .add-new-desktop span{
+        margin-left: 7px;
+      }
+      .form{
+        padding:1rem 0 0 0;
+      }
+      .form__label{
+        left:0;
+      }
+      .option-button{
+        padding: 1rem;
+      }
+      .price-text{
+        font-size: 18px;
+      }
+      .discount-badge{
+        font-size: 11px;
+      }
+      .payViaUpi-btn-label{
+        font-size: 21px;
+      }
 }

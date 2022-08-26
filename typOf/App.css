@@ -23,6 +23,10 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.Drawer__Main{
+  height: 550px;
+  overflow: auto;
+}
 .new-pm-backdrop::after {
   content: "";
   position: fixed;
@@ -52,6 +56,25 @@
 .coupon_holder{
   box-shadow: 0 -1px #cfcfcf inset;
   margin-top: 2%;
+  padding-bottom: 1%;
+}
+.btn-text{
+  margin-left: 15%;
+}
+.btn-text_labelPay{
+  display: flex;
+  font-size:20px
+}
+
+.btn-text-logo{
+  width: 90px;
+}
+.btn-text-arrow{
+  width: 14px;
+}
+.btn-text_labelDiscount{
+  display: flex;
+  font-size:15px
 }
 .coupon_item_holder{
 padding:0 18px;
@@ -70,14 +93,15 @@ margin-top: 5px;
   flex: 0 0 100%;
   font-size: 15px;
   margin-top: 1%;
-  padding: 0 2%;
+  padding: 0 4%;
 }
 .CartItem{
-  display: flex;
+  display: grid;
   margin:30px 0;
   width: 100%;
   margin-top: 10px;
   margin-bottom: 10px;
+  grid-template-columns: 30% 70%;
 }
 .CartItem__Info{
   padding-left: 12px;
@@ -319,7 +343,7 @@ span.discount__cart{
   z-index: -1;
   transition: transform .45s cubic-bezier(.785, .135, .15, .86);
   background-color: #1c1b1b;
-  ;
+  border-radius: 8px;
  }
  .gokwik-checkout button:hover::before{
   transform-origin: right center;
@@ -402,6 +426,156 @@ span.discount__cart{
   .new-pm-backdrop::after {
     content: unset;
   }
+}
+@media screen and  (max-width: 767px){
+    div#sidebar-cart {
+        width: calc(100vw - 60px);
+        max-height: 896px;
+    }
+    .new-pm__header{
+      min-height: 45px;
+    }
+    .coupon_item_holder{
+      padding:0 9px;
+      grid-template-columns: 51% 49%;
+    }
+    .coupon_item{
+      height: 72%;
+    }
+    .coupon_item div{
+      font-size: 13px !important;
+    }
+    h2.CartItem__Title.Heading, .CartItem_Meta.Heading.Text--subdued,
+    .QuantitySelector__CurrentQuantity{
+     font-size: 18px; 
+    }
+    
+    .QuantitySelector{
+      padding: 0;
+    }
+    .Drawer__Main{
+      height: 500px;
+    }
+    .Drawer__footer{
+      padding:10px 15px;
+    }
+    .Cart__Taxes{
+      font-size: 13px;
+    }
+    p.price-text{
+      font-size: 20px;
+      margin-top: 10px;
+    }
+    .btn-text{
+     margin-left: 0; 
+    }
+    .btn-text_labelPay{
+      font-size: 17px;;
+    }
+    .btn-text_labelDiscount{
+      font-size: 12px;
+    }
+    .btn-text-logo{
+      width: 60px;
+    }
+    .btn-text-arrow{
+      width: 10px;
+    }
+    .gokwik-checkout button div{
+      justify-content: center;
+    }
+    .mobile-view-page-wrap{
+      background:#fff;
+    padding: 0;
+    overflow-y: hidden;
+    
+    align-items: start;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    height: 100%;
+    max-height: 896px;
+    position: absolute;
+    z-index: 12;
+left: 50%;
+top: 50%;
+transform: translate(-50%, -50%);
+    }
+  .mobile-user-detail__header{
+    width: 100%;
+    z-index: 13;
+    background: #FFFFFF;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    max-height: 64px; 
+    padding: 14px;
+    }
+    .mobile-merchant-logo img{
+    width: auto;
+    max-height: 25px;
+    }
+    .steps_inner_mobile::after{
+      content:'';
+      border: 1px dashed #ededed;
+      position: absolute;
+      left: 75%;
+      top:14px;
+      width: 250%;
+    }
+    .steps_inner_mobile_verified::after{
+      content:'';
+      border: 1px dashed green;
+      position: absolute;
+      left: 9%;
+      top:14px;
+      width: 35%;
+    }
+    .steps_inner_address::after{
+      content:'';
+      border: 1px dashed #ededed;
+      position: absolute;
+      left: 54%;
+      top:14px;
+      width: 36%;
+    }
+
+    .steps_inner_address_verified::after{
+      content:'';
+      border: 1px dashed green;
+      position: absolute;
+      left: 54%;
+      top:14px;
+      width: 36%;
+    }
+    .product-details{
+      font-size: 14px;
+    }
+    .product-img img{
+      width: 150px;
+    }
+    .continue-button{
+      font-size: 18px;
+      padding: 1rem;
+    }
+    .main-footer{
+      padding: 1rem 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .footer{
+      margin-top: 0;
+    }
+    .main-container{
+      max-height: 470px !important;
+    }
+    .main-content_header{
+      font-size: 20px;
+    }
+    .footer{
+      margin-top:0;
+    }
+   
 }
 
 @keyframes App-logo-spin {

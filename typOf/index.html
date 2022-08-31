@@ -586,6 +586,7 @@ class CheckOutModal extends React.Component {
             message:'New address has been added.'
           });
           this.getAddress();
+          this.disableMessage();
         });
     }
     if (currentPage == "address" && e.target.name == "save") {
@@ -624,7 +625,7 @@ class CheckOutModal extends React.Component {
             message:'Address has been edited successfully.'
           });
           this.getAddress();
-          this.disableMessage()
+          this.disableMessage();
         });
     }
     if (currentPage == "address" && e.target.name == "continue") {
@@ -934,7 +935,7 @@ if(window.innerWidth < 767){
         {mobileView ? 
           <div className='mobile-view-page-wrap'>
             <header className="mobile-user-detail__header">
-              <div className="mobile-user-detail__header-back-icon"> <img
+              <div className="mobile-user-detail__header-back-icon" onClick={this.props.close}> <img
                             src="https://pdp.gokwik.co/assets/icons/bac.svg"
                             alt=""
                           /></div>
@@ -1092,7 +1093,7 @@ if(window.innerWidth < 767){
                   </div>
                 </div>
                 </div>
-              <div style={{overflowY:'auto',maxHeight:'625px',}}>
+              <div style={{overflowY:'auto',maxHeight:'600px',}}>
               
                 <div className="cart-wrap">
               <div className="cart-wrap-scroller" style={{padding:'0'}}>

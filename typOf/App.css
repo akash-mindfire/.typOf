@@ -434,6 +434,8 @@ span.discount__cart{
     }
     .new-pm__header{
       min-height: 45px;
+      font-size: 20px !important;
+      padding: 0px 3% !important;
     }
     .coupon_item_holder{
       padding:0 9px;
@@ -454,7 +456,7 @@ span.discount__cart{
       padding: 0;
     }
     .Drawer__Main{
-      height: 500px;
+      height: 70%;
     }
     .Drawer__footer{
       padding:10px 15px;
@@ -565,9 +567,10 @@ transform: translate(-50%, -50%);
     }
     .footer{
       margin-top: 0;
+      position: absolute !important;
     }
     .main-container{
-      max-height: 470px !important;
+      max-height: 400px !important;
     }
     .main-content_header{
       font-size: 20px;

@@ -1202,6 +1202,7 @@ section img{
       }
       .gk-content{
         padding: 0;
+        height: 77%;
       }
       .cart-wrap{
         padding:1rem;
@@ -1240,6 +1241,9 @@ section img{
         display:flex;
         align-items:center;
       }
-      
+      .CartItem__Remove{
+        font-size: 14px;
+        width: 55%;
+      }
 
 }

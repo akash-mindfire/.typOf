@@ -86,7 +86,7 @@ class Cart extends React.Component {
     }
     getWindowSize() {
   const {innerWidth, innerHeight} = window;
-  console.log(innerWidth);
+  
   return {innerWidth, innerHeight};
 }
     async getCartDetail() {
@@ -97,7 +97,7 @@ class Cart extends React.Component {
         .then((res) => res.json())
         .then(
           (result) => {
-            console.log(result.cart);
+            
             this.setState({
               cartItem: result.cart,
               totalAmount: result.cartTotalAmount,
@@ -134,7 +134,7 @@ class Cart extends React.Component {
       fetch(Url, requestMetadata)
         .then((res) => res.json())
         .then((res) => this.getCartDetail())
-        .then((res) => console.log(res));
+        
     };
     addQuantity = (id) => {
       let {baseURL, app_key,website,api_key}=this.props;
@@ -158,7 +158,7 @@ class Cart extends React.Component {
       fetch(Url, requestMetadata)
         .then((res) => res.json())
         .then((res) => this.getCartDetail())
-        .then((res) => console.log(res));
+        
     };
     subQuantity = (id) => {
       let {baseURL, app_key,website,api_key}=this.props;
@@ -182,10 +182,10 @@ class Cart extends React.Component {
       fetch(Url, requestMetadata)
         .then((res) => res.json())
         .then((res) => this.getCartDetail())
-        .then((res) => console.log(res));
+        
     };
     handleCheckout = (event) => {
-      console.log(event);
+      
       event.preventDefault();
   
       this.setState({ showLoader: true });
@@ -458,6 +458,7 @@ class CheckOutModal extends React.Component {
       fullAddress: "",
       fullName: "",
       selectedAddressType: "",
+      default:0,
       email: "",
     },
     stepMobileVerification: false,
@@ -476,7 +477,8 @@ class CheckOutModal extends React.Component {
     defaultAddress: [],
     secondLeft:30,
     showMessage:false,
-    message:''
+    message:'',
+    showDefaultCheckBox:false,
   };
   componentDidMount() {
     this.getCartDetail();
@@ -484,8 +486,6 @@ class CheckOutModal extends React.Component {
   async componentDidUpdate(prevProps, prevState) {
     if (this.state.otp !== prevState.otp) {
       this.disableLoader();
-      console.log(this.state.otp.join(""));
-      console.log(this.state.otp, this.state.userOTP);
       if (this.state.otp.length === 4) {
         if (this.state.otp == this.state.userOTP) {
           this.setState({
@@ -550,7 +550,7 @@ class CheckOutModal extends React.Component {
       editAddress,
     } = this.state;
     let {baseURL, app_key,website,api_key}=this.props;
-    console.log(e.target.name);
+    
     if (currentPage == "address" && e.target.name == "addNewAddress") {
       this.setState({showLoader:true});
       const Url = `${baseURL}addAddress${app_key}`;
@@ -602,6 +602,7 @@ class CheckOutModal extends React.Component {
         state: address.state,
         country: "India",
         pin: address.pincode,
+        default:address.default,
         store_id: "1",
         website: `${website}`,
         api_key: `${api_key}`,
@@ -637,11 +638,7 @@ class CheckOutModal extends React.Component {
     }
     if (currentPage == "mobile" && !existingUser && mobileOTPpage) {
       let { errors, newUser } = this.state;
-      if (!validator.isEmail(newUser.email)) {
-        errors.email = "Please enter valid Email";
-      } else {
-        errors.email = "";
-      }
+
       this.setState({ errors });
       const Url = `${baseURL}createUser${app_key}`;
       const postBody = {
@@ -670,11 +667,27 @@ class CheckOutModal extends React.Component {
   };
   async getState(e) {
     let { address } = this.state;
-    console.log(e.target.value);
-    await fetch("http://www.postalpincode.in/api/pincode/" + e.target.value)
+    let {baseURL, app_key,website,api_key}=this.props;
+    const Url = `${baseURL}getCityAndState${app_key}&pincode=${e.target.value}`;
+ 
+    const postBody = {
+      pincode:e.target.value,
+    "store_id" : "1",
+    website: `${website}`,
+      api_key: `${api_key}`,
+    };
+    const requestMetadata = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postBody),
+    };
+
+    await fetch(Url)
       .then((res) => res.json())
       .then((result) => {
-        console.log(result.PostOffice);
+        console.log(result);
         if (result.PostOffice[0]) {
           address.state = result.PostOffice[0].State;
           address.city = result.PostOffice[0].District;
@@ -704,9 +717,14 @@ class CheckOutModal extends React.Component {
     await fetch(Url, requestMetadata)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res.status == 404);
+        
         if (res.status == 404) this.setState({ existingUser: false });
-        else this.setState({ user_id: res.user.customer_id });
+        else {
+          this.setState({ user_id: res.user.customer_id });
+          setInterval(() => {
+       this.state.secondLeft && this.setState({ secondLeft: this.state.secondLeft-1});
+    }, 1000);  
+        }
         this.setState({
           mobileOTPpage: true,
           showLoader: false,
@@ -714,9 +732,7 @@ class CheckOutModal extends React.Component {
         });
       });
       
-      setInterval(() => {
-       this.state.secondLeft && this.setState({ secondLeft: this.state.secondLeft-1});
-    }, 1000);
+      
   }
   handleNewUserChange = (e, type) => {
     let { newUser } = this.state;
@@ -730,7 +746,7 @@ class CheckOutModal extends React.Component {
   handleAddress = (e, type) => {
     let { address } = this.state;
     if (type == "pincode") {
-      console.log(e.target.value.length);
+      
       address.pincode = e.target.value;
       if (e.target.value.length === 6) {
         this.getState(e);
@@ -754,14 +770,14 @@ class CheckOutModal extends React.Component {
       address.fullAddress = e.target.value;
     }
     if (type === "addressType") {
-      console.log(e.target.value);
+      
       address.selectedAddressType = e.target.value;
     }
     this.setState({ address });
   };
   handleSelectedAddress = (e) => {
     this.setState({ selectedAddress: e.target.value });
-    console.log(e.target.value);
+    
   };
   handleMakeDefaultAddress = (e, address_id) => {
     let {baseURL, app_key,website,api_key}=this.props;
@@ -793,7 +809,7 @@ class CheckOutModal extends React.Component {
   handleDeleteAddress = (e, address_id) => {
     let {baseURL, app_key,website,api_key}=this.props;
     e.preventDefault();
-    console.log(address_id)
+    
     if (window.confirm("Do you want to delete this address")) {
       const Url = `${baseURL}deleteAddress/${address_id}`;
       const postBody = {
@@ -820,6 +836,7 @@ class CheckOutModal extends React.Component {
   };
   handleEditAddress = (e, addressDetail) => {
     e.preventDefault();
+    console.log(addressDetail.default_address===0)
     let { address } = this.state;
     address.address_id = addressDetail.address_id;
     address.fullName = addressDetail.name;
@@ -828,6 +845,11 @@ class CheckOutModal extends React.Component {
     address.city = addressDetail.city;
     address.fullAddress = addressDetail.address1;
     address.state = addressDetail.state;
+    if(addressDetail.default_address)
+      this.setState({showDefaultCheckBox:false});
+    else this.setState({showDefaultCheckBox:true})
+    address.default=addressDetail.default_address;   
+    console.log('address:'+address.default);
     this.setState({ editAddress: true, continueBtn: true });
     this.setState({ address });
   };
@@ -843,8 +865,7 @@ class CheckOutModal extends React.Component {
             (n) => n.default_address == 1
           );
           let address = result.addresses.filter((n) => n.default_address == 0);
-          console.log('defaultAddress:'+defaultAddress);
-          console.log('address:'+address);
+          
           if (defaultAddress.length)
             this.setState({
               addressList: address,
@@ -893,6 +914,12 @@ class CheckOutModal extends React.Component {
       }
     }
   };
+  handleDefaultAddress=(e)=>{
+    e.preventDefault();
+    let {address}=this.state;
+     address.default=address.default == 0 ? 1 : 0;
+     this.setState({address});
+  }
   render() {
     let {
       newUser,
@@ -921,9 +948,9 @@ class CheckOutModal extends React.Component {
       secondLeft,
       showMessage,
       message,
-      showMobileSummaryDetail
+      showMobileSummaryDetail, 
+      showDefaultCheckBox
     } = this.state;
-    console.log('width:'+window.innerWidth);
     let mobileView=false;
 if(window.innerWidth < 767){
    mobileView=true;
@@ -1198,6 +1225,7 @@ if(window.innerWidth < 767){
                         ""
                       )}
                     </div>
+                    {currentPage== 'pay' &&
                     <div className="discounts">
                       <div className="discount-coupon">
                         <div className="discount-coupon-inner">
@@ -1234,7 +1262,7 @@ if(window.innerWidth < 767){
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div>}
 
                   </div>
                 </div>
@@ -1651,23 +1679,6 @@ if(window.innerWidth < 767){
                                 Full Name<em>*</em>
                               </label>
                             </div>
-                            {/* <div className="form">
-                              <input
-                                className="form__input"
-                                id="email"
-                                type="email"
-                                required
-                                maxlength={250}
-                                placeholder=" "
-                                value={address.email}
-                                onChange={(e) => {
-                                  this.handleAddress(e, "email");
-                                }}
-                              />
-                              <label for="email" className="form__label">
-                                Email Address<em>*</em>
-                              </label>
-                            </div> */}
                           </div>
                           <div className="line-inputs">
                             <div className="form">
@@ -1688,6 +1699,14 @@ if(window.innerWidth < 767){
                               </label>
                             </div>
                           </div>
+                          
+                          {!address.default ?
+                          <div className="line-inputs">
+                            <div className="form">
+                              <input type="checkbox" name="default_address" onChange={this.handleDefaultAddress()}/>
+                              <label for="default_address">Make this default address</label>
+                            </div>
+                          </div>:''}
                         </form>
                       </div>
                       
@@ -1842,7 +1861,8 @@ if(window.innerWidth < 767){
                         readOnly
                         placeholder=" "
                         value={mobileNumber}
-                        style={{ background: "#ecebeb" }}
+                        style={{color:'#696969'}}
+                        
                       />
                       <label for="mobile" className="form__label">
                         Mobile<em>*</em>
@@ -2009,11 +2029,12 @@ if(window.innerWidth < 767){
                         style={
                           stepMobileVerification
                             ? { border: "2px solid green" }
-                            : { border: "2px solid" }
+                            : { border: "2px solid", alignItems:'center' }
                         }
                       >
                         {stepMobileVerification ? (
                           <img
+                            style={{width:'15px', height:'22px'}}
                             src="https://pdp.gokwik.co/assets/icons/green-check.svg"
                             alt=""
                           />
@@ -2057,14 +2078,15 @@ if(window.innerWidth < 767){
                         className="circle-box"
                         style={
                           currentPage == "address"
-                            ? { border: "2px solid black" }
+                            ? { border: "2px solid black", alignItems:'center' }
                             : stepAddressVerification
                             ? { border: "2px solid green " }
-                            : { background: "#ededed", color: "#c9c9c9" }
+                            : { background: "#ededed", color: "#c9c9c9", alignItems:'center' }
                         }
                       >
                         {stepAddressVerification ? (
                           <img
+                          style={{width:'15px', height:'22px'}}
                             src="https://pdp.gokwik.co/assets/icons/green-check.svg"
                             alt=""
                           />
@@ -2102,7 +2124,7 @@ if(window.innerWidth < 767){
                         className="title"
                         style={
                           currentPage == "pay"
-                            ? { color: "#000" }
+                            ? { color: "#000", alignItems:'center' }
                             : { color: "#c9c9c9" }
                         }
                       >
@@ -2562,6 +2584,13 @@ if(window.innerWidth < 767){
                               </label>
                             </div>
                           </div>
+                          
+                          <div className="line-inputs">
+                            <div className="form" style={{marginTop:'10px'}}>
+                              <input type="checkbox" className="input-default-checkbox"  name="default_address" style={{width:'20px', height:'20px'}} checked={address.default == 1 ? 'checked' :''} onClick={ (e)=>showDefaultCheckBox ? this.handleDefaultAddress(e):''}/>
+                              <label for="default_address" style={{color:'grey', padding:'5px', fontSize:'18px'}}>Make this default address</label>
+                            </div>
+                          </div>
                         </form>
                       </div>
                       
@@ -2715,7 +2744,7 @@ if(window.innerWidth < 767){
                         readOnly
                         placeholder=" "
                         value={mobileNumber}
-                        style={{ background: "#ecebeb" }}
+                        style={{color:'#696969'}}
                       />
                       <label for="mobile" className="form__label">
                         Mobile<em>*</em>
@@ -2947,6 +2976,7 @@ if(window.innerWidth < 767){
                         ""
                       )}
                     </div>
+                    {currentPage == 'pay' && 
                     <div className="discounts">
                       <div className="discount-coupon">
                         <div className="discount-coupon-inner">
@@ -2981,7 +3011,7 @@ if(window.innerWidth < 767){
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div>}
                   </div>
                 </div>
               </div>

@@ -395,6 +395,10 @@ span.discount__cart{
   height: auto;
   width: 100%;
 }
+.input-default-checkbox:checked{
+  accent-color: #000;
+  color:#fff;
+}
 @media screen and (max-width:767px){
   .popup__main__component {
       width: 27rem ;

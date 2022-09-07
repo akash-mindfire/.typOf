@@ -6,14 +6,17 @@
     <title>Hello World</title>
     <link rel="stylesheet" type="text/css" href="App.css" />  
     <link rel="stylesheet" type="text/css" href="Checkout.css" />  
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link> 
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>  
+    
     <!-- Don't use this in production: -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   </head>
   <body>
     <div id="root"></div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>  
     <script type="text/babel">
     
     class MyApp extends React.Component {
@@ -81,8 +84,6 @@ class Cart extends React.Component {
     componentDidMount() {
       this.getWindowSize();
       this.getCartDetail();
-
-      //console.log(this.props.app_key,this.props.baseURL)
     }
     getWindowSize() {
   const {innerWidth, innerHeight} = window;
@@ -458,9 +459,9 @@ class CheckOutModal extends React.Component {
       fullAddress: "",
       fullName: "",
       selectedAddressType: "",
-      default:0,
       email: "",
     },
+    currentDefaultAddress:false,
     stepMobileVerification: false,
     stepAddressVerification: false,
     existingUser: true,
@@ -478,7 +479,7 @@ class CheckOutModal extends React.Component {
     secondLeft:30,
     showMessage:false,
     message:'',
-    showDefaultCheckBox:false,
+    showDefaultCheckBox:true,
   };
   componentDidMount() {
     this.getCartDetail();
@@ -548,6 +549,7 @@ class CheckOutModal extends React.Component {
       address,
       addNewAddress,
       editAddress,
+      currentDefaultAddress
     } = this.state;
     let {baseURL, app_key,website,api_key}=this.props;
     
@@ -563,6 +565,7 @@ class CheckOutModal extends React.Component {
         state: address.state,
         country: "India",
         pin: address.pincode,
+        default:currentDefaultAddress ? 1 : 0,
         store_id: "1",
         website: `${website}`,
         api_key: `${api_key}`,
@@ -583,7 +586,8 @@ class CheckOutModal extends React.Component {
             continueBtn: false,
             selectedAddress: "",
             showMessage:true,
-            message:'New address has been added.'
+            message:'New address has been added.',
+            currentDefaultAddress:false
           });
           this.getAddress();
           this.disableMessage();
@@ -602,7 +606,7 @@ class CheckOutModal extends React.Component {
         state: address.state,
         country: "India",
         pin: address.pincode,
-        default:address.default,
+        default:currentDefaultAddress ? 1 : 0,
         store_id: "1",
         website: `${website}`,
         api_key: `${api_key}`,
@@ -623,7 +627,8 @@ class CheckOutModal extends React.Component {
             continueBtn: false,
             selectedAddress: "",
             showMessage:true,
-            message:'Address has been edited successfully.'
+            message:'Address has been edited successfully.',
+            currentDefaultAddress:false
           });
           this.getAddress();
           this.disableMessage();
@@ -687,7 +692,6 @@ class CheckOutModal extends React.Component {
     await fetch(Url)
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
         if (result.PostOffice[0]) {
           address.state = result.PostOffice[0].State;
           address.city = result.PostOffice[0].District;
@@ -809,9 +813,17 @@ class CheckOutModal extends React.Component {
   handleDeleteAddress = (e, address_id) => {
     let {baseURL, app_key,website,api_key}=this.props;
     e.preventDefault();
-    
-    if (window.confirm("Do you want to delete this address")) {
-      const Url = `${baseURL}deleteAddress/${address_id}`;
+    swal({
+  title: 'Do you want to delete this address?',
+  text: "You won't be able to revert this!",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+}).then((result) => {
+  console.log(result);
+  if (result.value) {
+    const Url = `${baseURL}deleteAddress/${address_id}`;
       const postBody = {
         customer_id: this.state.user_id,
         store_id: "1",
@@ -832,11 +844,10 @@ class CheckOutModal extends React.Component {
          
           this.getAddress();
         });
-    }
+  }
+})
   };
   handleEditAddress = (e, addressDetail) => {
-    e.preventDefault();
-    console.log(addressDetail.default_address===0)
     let { address } = this.state;
     address.address_id = addressDetail.address_id;
     address.fullName = addressDetail.name;
@@ -849,11 +860,11 @@ class CheckOutModal extends React.Component {
       this.setState({showDefaultCheckBox:false});
     else this.setState({showDefaultCheckBox:true})
     address.default=addressDetail.default_address;   
-    console.log('address:'+address.default);
     this.setState({ editAddress: true, continueBtn: true });
     this.setState({ address });
   };
   getAddress = () => {
+    let {defaultAddress, addNewAddress,editAddress}=this.state;
     let {baseURL, app_key,website,api_key}=this.props;
     fetch(
       `${baseURL}fetchAllAddress${app_key}&customer_id=${this.state.user_id}`
@@ -916,9 +927,8 @@ class CheckOutModal extends React.Component {
   };
   handleDefaultAddress=(e)=>{
     e.preventDefault();
-    let {address}=this.state;
-     address.default=address.default == 0 ? 1 : 0;
-     this.setState({address});
+    //e.stopPropagation() ;
+     this.setState({currentDefaultAddress:!this.state.currentDefaultAddress});
   }
   render() {
     let {
@@ -932,6 +942,7 @@ class CheckOutModal extends React.Component {
       mobileOTPpage,
       otp,
       currentPage,
+      currentDefaultAddress,
       pincode,
       city,
       addressList,
@@ -1017,11 +1028,12 @@ if(window.innerWidth < 767){
                         style={
                           stepMobileVerification
                             ? { border: "2px solid green" }
-                            : { border: "2px solid" }
+                            : { border: "2px solid" , alignItems:'center' }
                         }
                       >
                         {stepMobileVerification ? (
                           <img
+                          style={{width:'15px', height:'22px'}}
                             src="https://pdp.gokwik.co/assets/icons/green-check.svg"
                             alt=""
                           />
@@ -1065,14 +1077,15 @@ if(window.innerWidth < 767){
                         className="circle-box"
                         style={
                           currentPage == "address"
-                            ? { border: "2px solid black" }
+                            ? { border: "2px solid black",alignItems:'center' }
                             : stepAddressVerification
                             ? { border: "2px solid green " }
-                            : { background: "#ededed", color: "#c9c9c9" }
+                            : { background: "#ededed", color: "#c9c9c9",alignItems:'center' }
                         }
                       >
                         {stepAddressVerification ? (
                           <img
+                          style={{width:'15px', height:'22px'}}
                             src="https://pdp.gokwik.co/assets/icons/green-check.svg"
                             alt=""
                           />
@@ -1101,7 +1114,7 @@ if(window.innerWidth < 767){
                         style={
                           currentPage == "pay"
                             ? { border: "2px solid black" }
-                            : { background: "#ededed", color: "#c9c9c9" }
+                            : { background: "#ededed", color: "#c9c9c9" ,alignItems:'center'}
                         }
                       >
                         3
@@ -1700,13 +1713,13 @@ if(window.innerWidth < 767){
                             </div>
                           </div>
                           
-                          {!address.default ?
+                          
                           <div className="line-inputs">
-                            <div className="form">
-                              <input type="checkbox" name="default_address" onChange={this.handleDefaultAddress()}/>
-                              <label for="default_address">Make this default address</label>
+                            <div className="form" style={{marginTop:'10px'}}>
+                              <input type="checkbox" className="input-default-checkbox"  name="default_address" style={{width:'20px', height:'20px'}} checked={currentDefaultAddress} onChange={ (e)=>showDefaultCheckBox ? this.handleDefaultAddress(e):''}/>
+                              <label for="default_address" style={{color:'grey', padding:'5px', fontSize:'18px'}}>Make this default address</label>
                             </div>
-                          </div>:''}
+                          </div>
                         </form>
                       </div>
                       
@@ -2021,6 +2034,7 @@ if(window.innerWidth < 767){
                           address_id: "",
                           progress: ".00",
                           mobileNumber: "",
+                          currentDefaultAddress:true
                         });
                       }}
                     >
@@ -2587,7 +2601,7 @@ if(window.innerWidth < 767){
                           
                           <div className="line-inputs">
                             <div className="form" style={{marginTop:'10px'}}>
-                              <input type="checkbox" className="input-default-checkbox"  name="default_address" style={{width:'20px', height:'20px'}} checked={address.default == 1 ? 'checked' :''} onClick={ (e)=>showDefaultCheckBox ? this.handleDefaultAddress(e):''}/>
+                              <input type="checkbox" className="input-default-checkbox"  name="default_address" style={{width:'20px', height:'20px'}} checked={currentDefaultAddress} onChange={ (e)=>showDefaultCheckBox ? this.handleDefaultAddress(e):''}/>
                               <label for="default_address" style={{color:'grey', padding:'5px', fontSize:'18px'}}>Make this default address</label>
                             </div>
                           </div>
